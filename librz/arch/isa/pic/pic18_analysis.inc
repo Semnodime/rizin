@@ -190,16 +190,16 @@ static int analysis_pic_pic18_op(
 	case PIC18_OPCODE_RETFIE: // retfie
 		aop->type = RZ_ANALYSIS_OP_TYPE_RET;
 		break;
-	case PIC18_OPCODE_TBLWTMm: // tblwt
-	case PIC18_OPCODE_TBLWTMma: // tblwt
-	case PIC18_OPCODE_TBLWTam: // tblwt
-	case PIC18_OPCODE_TBLWTMms: // tblwt
+	case PIC18_OPCODE_TBLWTMs: // tblwt
+	case PIC18_OPCODE_TBLWTMsi: // tblwt
+	case PIC18_OPCODE_TBLWTis: // tblwt
+	case PIC18_OPCODE_TBLWTMsd: // tblwt
 		aop->type = RZ_ANALYSIS_OP_TYPE_LOAD;
 		break;
-	case PIC18_OPCODE_TBLRDam: // tblrd
-	case PIC18_OPCODE_TBLRDm: // tblrd
-	case PIC18_OPCODE_TBLRDma: // tblrd
-	case PIC18_OPCODE_TBLRDms: // tblrd
+	case PIC18_OPCODE_TBLRDis: // tblrd
+	case PIC18_OPCODE_TBLRDs: // tblrd
+	case PIC18_OPCODE_TBLRDsi: // tblrd
+	case PIC18_OPCODE_TBLRDsd: // tblrd
 		aop->type = RZ_ANALYSIS_OP_TYPE_STORE;
 		break;
 	case PIC18_OPCODE_POP: // pop

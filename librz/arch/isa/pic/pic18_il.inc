@@ -315,17 +315,45 @@ static RzILOpEffect *pic18_il(Pic18Op *op) {
 	case PIC18_OPCODE_SUBWFB: return op_sub(R_DEST, VRF, VRW, VRC);
 	case PIC18_OPCODE_SWAPF:
 		return SETG(R_DEST, APPEND(UNSIGNED(4, VRF), UNSIGNED(4, SHIFTR0(VRF, U8(4)))));
-	case PIC18_OPCODE_TBLWTam: break;
-	case PIC18_OPCODE_TBLWTMms: break;
-	case PIC18_OPCODE_TBLWTMma: break;
-	case PIC18_OPCODE_TBLWTMm: break;
-	case PIC18_OPCODE_TBLRDam: break;
-	case PIC18_OPCODE_TBLRDms: break;
-	case PIC18_OPCODE_TBLRDma: break;
-	case PIC18_OPCODE_TBLRDm: break;
-	case PIC18_OPCODE_TSTFSZ: break;
-	case PIC18_OPCODE_XORWF: break;
-	case PIC18_OPCODE_XORLW: break;
+
+	case PIC18_OPCODE_TBLRDs:
+		return SETG("tblat", LOAD(VARG("tblptr")));
+	case PIC18_OPCODE_TBLRDis:
+		return SEQ2(
+			SETG("tblptr", ADD(VARG("tblptr"), U32(1))),
+			SETG("tblat", LOAD(VARG("tblptr"))));
+	case PIC18_OPCODE_TBLRDsd:
+		return SEQ2(
+			SETG("tblat", LOAD(VARG("tblptr"))),
+			SETG("tblptr", SUB(VARG("tblptr"), U32(1))));
+	case PIC18_OPCODE_TBLRDsi:
+		return SEQ2(
+			SETG("tblat", LOAD(VARG("tblptr"))),
+			SETG("tblptr", ADD(VARG("tblptr"), U32(1))));
+	case PIC18_OPCODE_TBLWTMs:
+		return STORE(VARG("tblptr"), VARG("tblat"));
+	case PIC18_OPCODE_TBLWTis:
+		return SEQ2(
+			SETG("tblptr", ADD(VARG("tblptr"), U32(1))),
+			STORE(VARG("tblptr"), VARG("tblat")));
+	case PIC18_OPCODE_TBLWTMsd:
+		return SEQ2(
+			STORE(VARG("tblptr"), VARG("tblat")),
+			SETG("tblptr", SUB(VARG("tblptr"), U32(1))));
+	case PIC18_OPCODE_TBLWTMsi:
+		return SEQ2(
+			STORE(VARG("tblptr"), VARG("tblat")),
+			SETG("tblptr", ADD(VARG("tblptr"), U32(1))));
+	case PIC18_OPCODE_TSTFSZ:
+		return op_skip_if(op, IS_ZERO(VRF));
+	case PIC18_OPCODE_XORWF:
+		return SEQ2(
+			SETG(R_DEST, XOR(VRW, VRF)),
+			status_res(VR_DEST));
+	case PIC18_OPCODE_XORLW:
+		return SEQ2(
+			SETG(RW, XOR(VRW, VRF)),
+			status_res(VRW));
 	case PIC18_OPCODE_INVALID: break;
 	}
 	return NULL;
